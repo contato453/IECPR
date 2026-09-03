@@ -1,0 +1,63 @@
+/*
+ * Regras de impressão — papel A4, layout em 2 colunas, mostra tudo o que a
+ * tela mostra (igreja, hora, observações, dirigente, pregador, status).
+ * Esconde apenas navegação e botões de ação. Nada de truncamento.
+ *
+ * Cuidado de build (Bug #7): classes Tailwind com colchetes escritas à mão
+ * em CSS quebram o Lightning CSS do Tailwind v4. Por isso as classes abaixo
+ * usam nomes próprios (.iecpr-print-*), nunca `.text-[10px]` literal.
+ */
+
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm 10mm;
+  }
+
+  html,
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Esconde apenas navegação e ações — nunca contêineres de conteúdo. */
+  .iecpr-no-print,
+  [data-print="hide"] {
+    display: none !important;
+  }
+
+  .iecpr-print-area {
+    display: block !important;
+  }
+
+  .iecpr-print-columns {
+    column-count: 2;
+    column-gap: 8mm;
+  }
+
+  .iecpr-print-columns > * {
+    break-inside: avoid;
+  }
+
+  /* Nada de corte de texto na impressão — o card mostra tudo por completo. */
+  .iecpr-clamp-1 {
+    overflow: visible !important;
+    text-overflow: unset !important;
+    white-space: normal !important;
+  }
+
+  .iecpr-print-header {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6mm;
+    border-bottom: 1px solid #999;
+    padding-bottom: 3mm;
+  }
+}
+
+@media not print {
+  .iecpr-print-header {
+    display: none;
+  }
+}
